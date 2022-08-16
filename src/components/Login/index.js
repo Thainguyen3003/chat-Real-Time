@@ -1,16 +1,25 @@
 import React from "react";
 import { Row, Col, Button, Typography } from "antd";
-import { auth } from "../../firebase/config";
-import firebase from 'firebase/compat/app';
+import firebase, { authentication } from "../../firebase/config";
+import { useNavigate } from "react-router-dom";
+
+import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 
 const { Title } = Typography;
 
-const fbProvider = new firebase.auth.FacebookAuthProvider();
-
 function Login() {
-    const handleFbLogin = () => {
-        auth.signInWithPopup(fbProvider)
-    }
+  const history = useNavigate();
+
+  const handleFbLogin = () => {
+    const provider = new FacebookAuthProvider();
+    signInWithPopup(authentication, provider)
+      .then((res) => {
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div>
@@ -22,7 +31,9 @@ function Login() {
           <Button style={{ width: "100%", marginBottom: 5 }}>
             Đăng nhập bằng google
           </Button>
-          <Button style={{ width: "100%" }} onClick={handleFbLogin}>Đăng nhập bằng facebook</Button>
+          <Button style={{ width: "100%" }} onClick={handleFbLogin}>
+            Đăng nhập bằng facebook
+          </Button>
         </Col>
       </Row>
     </div>
